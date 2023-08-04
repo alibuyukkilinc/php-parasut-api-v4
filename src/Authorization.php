@@ -141,23 +141,30 @@ class Authorization extends Request
 	 * @param $method
 	 * @return array|\stdClass
 	 */
-	public function request($path, $params = null, $method)
-	{
-		$curlURI = $this->api_url.'/'.$this->version.'/'.$this->company_id.'/'.$path;
-
+	public function request($path, $params = null, $method = false)
+	{	
 		$response = [];
-		if ($method === "GET")
-			$response = $this->__getRequest($curlURI, $params, $this->access_token);
-
-		if ($method === "POST")
-			$response = $this->__postRequest($curlURI, $params, $this->access_token);
-
-		if ($method === "PUT")
-			$response = $this->__putRequest($curlURI, $params, $this->access_token);
-
-		if ($method === "DELETE")
-			$response = $this->__deleteRequest($curlURI, $params, $this->access_token);
-
+		if($method){
+			$curlURI = $this->api_url.'/'.$this->version.'/'.$this->company_id.'/'.$path;	
+			switch($method){
+				case 'GET':
+				$response = $this->__getRequest($curlURI, $params, $this->access_token);
+				break;
+				case 'POST':
+				$response = $this->__postRequest($curlURI, $params, $this->access_token);
+				break;
+				case 'PUT':
+				$response = $this->__putRequest($curlURI, $params, $this->access_token);
+				break;
+				case 'DELETE':
+				$response = $this->__deleteRequest($curlURI, $params, $this->access_token);
+				break;
+			}
+			
+		} else {
+			$response = ['error' => 'Parasut API : Method Error!'];
+		}
+	
 		return $response;
 	}
 }
